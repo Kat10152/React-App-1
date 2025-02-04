@@ -4,14 +4,19 @@ import { useState, useCallback } from "react"
  * unordered list.
  * @returns Component
  */
-export default function Sidebar() {
-  let [newMenuItem, setNewMenuItem] = useState("")
+export default function Sidebar({initialMenuItems = [] }) {
+  let [newMenuItem, setNewMenuItem] = useState("initialMenuItems");
   // TODO: 2 Using a state hook, maintain the current menu items as an array state.
-  // let [menuItems, setMenuItems] = useState(initialMenuItems)
+  let [menuItems, setMenuItems] = useState(initialMenuItems)
+  let [newMenuItem, setNewMenuItem] = useState("");
   let [filter, setFilter] = useState("")
   // Adds a single string passed in as parameter to the state element
   // "menuItems" that holds the set of current menu items.
   let addMenuItem = useCallback(() => {
+    if (newMenuItem.trim()) {
+      setNewMenuItems([newMenuItem, ... menuItems]);
+      setNewMenuItem("");}
+    
     console.log("Added menu item")
     //   // TODO: 3. Add a new menu item to the correct variable associated with this class.
     //   // This involves adding a parameter and changing a class instance variable (props).
@@ -20,7 +25,9 @@ export default function Sidebar() {
 
   // TODO: 4. Display ONLY the menu items that contain the filter element value
   // "term" in them. Each menu item should be an unordered list item wrapped in an unordered list (ul) element.
-
+let filteredMenu = menuItems.filter((item) =>
+  item.toLowerCase().includes(filter.toLowerCase())
+  );
   // TODO: 1 Render inside the outer div an unordered list of the menu items, with each string in the array
   // its own item.
   return (
@@ -33,7 +40,7 @@ export default function Sidebar() {
       ></input>
       <br />
       <button
-        onClick={() => {
+        onClick={(addMenuItem) => {
           /* TODO: 3 */
         }}
       >
@@ -47,6 +54,11 @@ export default function Sidebar() {
         onChange={(event) => setFilter(event.target.value)}
         placeholder="Filter by..."
       ></input>
+      <br />
+      <ul>
+        {filteredMenu.map((item, index) => (
+      <li key={index}>{item}</li> ))}
+      </ul>
     </div>
   )
 }
